@@ -1,0 +1,14 @@
+# Solver options
+solver:
+  name: "cbc" # solver name, e.g. cbc, glpk, gurobi
+  tee: true   # prints solver output to console if true
+
+# Electricity demand
+demand:
+  profile: "energy_data.csv"
+  column: "electricity demand (kW)"
+  scaling_factor: 1
+
+# Grid
+grid:
+  variable_costs: 0.3  # €/kWh

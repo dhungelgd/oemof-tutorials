@@ -12,3 +12,13 @@ demand:
 # Grid
 grid:
   variable_costs: 0.3  # €/kWh
+  feedin_tariff: 0.06  # €/kwh
+
+# PV
+pv:
+  profile: "energy_data.csv"
+  column: "pv yield (kW/kW)"
+  capacity: 5 # kW
+  lifetime: 20 # years
+  capex: 1500 # €/kw
+  opex: 3 # %

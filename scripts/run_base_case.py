@@ -11,7 +11,7 @@ es, results, meta_results = run_scenario(config_file)
 plot_energy_system_graph(
     energy_system=es,
     scenario_name="base_case",
-    save_dir=project_root / "results" / "plots"
+    save_dir=project_root / "results" / "graphs"
 )
 
 print(f"Total annual costs: {meta_results['objective']:.2f} €")

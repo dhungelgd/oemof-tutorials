@@ -9,15 +9,15 @@ def run_scenario(config_file):
     config = load_yaml(config_file)
 
     # load input csv data
-    load_profile = load_csv(config["demand"]["profile"])
+    input_data = load_csv(config["technologies"]["electricity_demand"]["profile"])
 
     # build energy system
-    es, el_bus, grid = build_energy_system(config, load_profile)
+    es, buses = build_energy_system(config, input_data)
 
     # solver settings from yaml
     solver_cfg = config["solver"]
 
-    # solve optimization
+    # solve optimization model
     model = solph.Model(es)
     model.solve(solver = solver_cfg["name"], solve_kwargs={"tee": solver_cfg["tee"]})
 

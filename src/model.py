@@ -1,38 +1,25 @@
+from src.technologies import TECH_MAPPING
 from oemof import solph
 
-# build a energy system using solph
 def build_energy_system(config, input_data):
 
-    # create energy system
-    es = solph.EnergySystem(
-        timeindex=input_data.index,
-        infer_last_interval=True
-    )
+    es = solph.EnergySystem(timeindex=input_data.index, infer_last_interval=True)
 
-    # create an electricity bus
-    el_bus = solph.Bus(label="electricity")
+    # dictionary to store references to buses
+    buses = {}
 
-    # electricity demand
-    demand_cfg = config["demand"]
-    electricity_demand = solph.components.Sink(
-        label = "electricity_demand",
-        inputs = {
-            el_bus: solph.Flow(
-                nominal_capacity=demand_cfg["scaling_factor"],
-                fix=input_data[demand_cfg["column"]],
-            )
-        }
-    )
+    # create buses
+    buses["electricity"] = solph.Bus(label="electricity")
+    es.add(buses["electricity"])
 
-    # add grid supply
-    grid_cfg = config["grid"]
-    grid = solph.Bus(
-        label = "electricity_grid",
-        outputs={el_bus: solph.Flow(variable_costs=grid_cfg["variable_costs"])},
-        balanced=False
-    )
+    # loop through all technology types in the mapping
+    for tech_name, tech_cfg in config["technologies"].items():
 
-    # add the components to the energy system
-    es.add(el_bus, electricity_demand, grid)
+        add_func = TECH_MAPPING.get(tech_name)
 
-    return es, el_bus, grid
+        if add_func is None:
+            raise ValueError(f"No implementation for technology: {tech_name}")
+
+        add_func(es, buses, tech_cfg, input_data)
+
+    return es, buses

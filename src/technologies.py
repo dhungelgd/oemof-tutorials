@@ -34,12 +34,18 @@ def add_electricity_grid(es, buses, cfg, input_data):
 # pv
 def add_pv(es, buses, cfg, input_data):
 
+    # decide whether PV is fixed or can be optimized
+    if cfg.get("mode", "optimizable")  == "fixed":
+        flow_param = {"fix": input_data[cfg["column"]]}
+    else:
+        flow_param = {"maximum": input_data[cfg["column"]]}
+
     pv = solph.components.Source(
         label="pv",
         outputs={
             buses["electricity"]: solph.Flow(
                 nominal_capacity=cfg["capacity"],
-                fix=input_data[cfg["column"]]
+                **flow_param
             )
         }
     )
@@ -50,4 +56,5 @@ def add_pv(es, buses, cfg, input_data):
 TECH_MAPPING = {
     "electricity_demand": add_electricity_demand,
     "electricity_grid": add_electricity_grid,
+    "pv": add_pv
 }

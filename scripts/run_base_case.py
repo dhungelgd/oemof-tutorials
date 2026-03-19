@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 
 project_root = Path(__file__).resolve().parent.parent
-config_file = os.path.join(os.path.dirname(__file__), "..", "config", "technologies.yaml")
+config_file = os.path.join(os.path.dirname(__file__), "..", "config", "02_fix_pv.yaml")
 es, results, meta_results = run_scenario(config_file)
 
 # plot the network graph

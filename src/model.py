@@ -1,8 +1,10 @@
 from src.technologies import TECH_MAPPING
 from oemof import solph
 
+# build an energy system using solph
 def build_energy_system(config, input_data):
 
+    #create an energy system
     es = solph.EnergySystem(timeindex=input_data.index, infer_last_interval=True)
 
     # dictionary to store references to buses

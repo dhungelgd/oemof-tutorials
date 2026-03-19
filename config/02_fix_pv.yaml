@@ -1,0 +1,39 @@
+buses:
+  # Electricity bus
+  electricity_bus:
+    label: "electricity"
+
+technologies:
+  # Electricity demand
+  electricity_demand:
+    profile: "energy_data.csv"
+    column: "electricity demand (kW)"
+    scaling_factor: 1
+    bus: "electricity"
+    label: "electricity_demand"
+
+  # Grid
+  electricity_grid:
+    bus: "electricity"
+    variable_costs: 0.3  # €/kWh
+    feedin_tariff: 0.06  # €/kwh
+    label: "electricity_grid"
+
+  # PV
+  pv:
+    profile: "energy_data.csv"
+    column: "pv yield (kW/kW)"
+    capacity: 5 # kW
+    lifetime: 20 # years
+    capex: 1500 # €/kw
+    opex: 3 # %
+    label: "pv"
+    mode: "optimizable" # or "optimizable"
+
+
+# Solver options
+solver:
+  name: "cbc" # solver name, e.g. cbc, glpk, gurobi
+  tee: false   # prints solver output to console if true
+
+

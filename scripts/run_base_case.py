@@ -4,13 +4,13 @@ from pathlib import Path
 import os
 
 project_root = Path(__file__).resolve().parent.parent
-config_file = os.path.join(os.path.dirname(__file__), "..", "config", "02_fix_pv.yaml")
+config_file = os.path.join(os.path.dirname(__file__), "..", "config", "03_pv_battery_system.yaml")
 es, results, meta_results = run_scenario(config_file)
 
 # plot the network graph
 plot_energy_system_graph(
     energy_system=es,
-    scenario_name="base_case",
+    scenario_name="03_pv_battery_system",
     save_dir=project_root / "results" / "graphs"
 )
 

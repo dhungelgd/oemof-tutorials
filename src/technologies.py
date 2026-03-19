@@ -52,9 +52,24 @@ def add_pv(es, buses, cfg, input_data):
 
     es.add(pv)
 
+# battery
+def add_battery(es, buses, cfg, input_data):
+
+    battery = solph.components.GenericStorage(
+        label="Battery",
+        nominal_capacity=cfg["capacity"],
+        inputs={buses["electricity"]:solph.Flow()},
+        outputs={buses["electricity"]: solph.Flow()},
+        inflow_conversion_factor = cfg["inflow_conversion_factor"],
+        loss_rate = cfg["loss_rate"]
+    )
+
+    es.add(battery)
+
 # mapping dictionary
 TECH_MAPPING = {
     "electricity_demand": add_electricity_demand,
     "electricity_grid": add_electricity_grid,
-    "pv": add_pv
+    "pv": add_pv,
+    "battery": add_battery
 }

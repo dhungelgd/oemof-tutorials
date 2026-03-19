@@ -1,3 +1,8 @@
+# Solver options
+solver:
+  name: "cbc" # solver name, e.g. cbc, glpk, gurobi
+  tee: false   # prints solver output to console if true
+
 buses:
   # Electricity bus
   electricity_bus:
@@ -30,9 +35,16 @@ technologies:
     label: "pv"
     mode: "optimizable" # or "optimizable"
 
-# Solver options
-solver:
-  name: "cbc" # solver name, e.g. cbc, glpk, gurobi
-  tee: false   # prints solver output to console if true
+  # Battery
+  battery:
+    capacity: 10  #kWh
+    lifetime: 20  #years
+    capex: 750  #€/kWh
+    opex: 3  # % of capex
+    inflow_conversion_factor: 0.9
+    loss_rate: 0.01
+
+
+
 
 

@@ -1,5 +1,6 @@
 from src.scenario_runner import run_scenario
 from src.plotting import plot_energy_system_graph
+from src.postprocessing import process_results
 from pathlib import Path
 import os
 
@@ -15,4 +16,8 @@ plot_energy_system_graph(
 )
 
 print(f"Total annual costs: {meta_results['objective']:.2f} €")
+
+# process flows
+flows = process_results(results=results, bus_name="electricity")
+print(flows)
 

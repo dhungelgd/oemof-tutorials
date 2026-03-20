@@ -21,6 +21,6 @@ print(f"Total annual costs: {meta_results['objective']:.2f} €")
 flows = process_results(results=results, bus_name="electricity")
 print(flows)
 
-plot_energy_flows(flows, bus_name="electricity")
+plot_energy_flows(flows, bus_name="electricity", start="2021-02-01", end="2021-02-07")
 
-plot_energy_flows_plotly(flows, bus_name="electricity")
+plot_energy_flows_plotly(flows, bus_name="electricity", start="2021-02-01", end="2021-02-07")

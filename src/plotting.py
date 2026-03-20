@@ -114,33 +114,18 @@ def plot_energy_flows_plotly(flows, bus_name, start=None, end=None):
     # create figure
     fig = go.Figure()
 
-    # stack supply flows
-    cumulative = None
-
-    for i, col in enumerate(supply_cols):
-        values = flows[col]
-
-        if cumulative is None:
-            y_values = values
-            fill_type = "tozeroy"
-            cumulative = values.copy()
-        else:
-            y_values = cumulative + values
-            fill_type = "tonexty"
-            cumulative += values
+    for col in supply_cols:
 
         fig.add_trace(
             go.Scatter(
                 x=flows.index,
-                y=y_values,
+                y=flows[col],
                 mode="lines",
                 name=col.replace(f"_{bus_name}", ""),
                 line=dict(width=0.5),
-                fill=fill_type
+                stackgroup="one"
             )
         )
-
-        cumulative += values
 
     # plot demand
     if demand_cols:
@@ -163,13 +148,13 @@ def plot_energy_flows_plotly(flows, bus_name, start=None, end=None):
         xaxis=dict(
             title="Time",
             showline=True,
-            linewidth=2,
+            linewidth=3,
             linecolor="black",
         ),
         yaxis=dict(
             title="Power (kW)",
             showline=True,
-            linewidth=2,
+            linewidth=3,
             linecolor="black"
         ),
         legend=dict(font=dict(size=12)),

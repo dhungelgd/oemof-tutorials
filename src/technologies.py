@@ -2,6 +2,10 @@ from oemof import solph
 
 # create a function for each component
 
+def calculate_epc(capex, lifetime, invest_rate):
+    pass
+
+
 # electricity demand
 def add_electricity_demand(es, buses, cfg, input_data):
 
@@ -36,15 +40,19 @@ def add_pv(es, buses, cfg, input_data):
 
     # decide whether PV is fixed or can be optimized
     if cfg.get("mode", "optimizable")  == "fixed":
-        flow_param = {"fix": input_data[cfg["column"]]}
-    else:
         flow_param = {"maximum": input_data[cfg["column"]]}
+        nominal_capacity = cfg["capacity"]
+    elif cfg.get("mode") == "invest":
+        flow_param = {"fix": input_data[cfg["column"]]}
+        nominal_capacity = solph.Investment(ep_costs=cfg["ep_cost"])
+    else:
+        raise ValueError(f"Unknown mode {cfg['mode']} for PV")
 
     pv = solph.components.Source(
         label="pv",
         outputs={
             buses["electricity"]: solph.Flow(
-                nominal_capacity=cfg["capacity"],
+                nominal_capacity=nominal_capacity,
                 **flow_param
             )
         }

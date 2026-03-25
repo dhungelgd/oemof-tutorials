@@ -1,10 +1,7 @@
 from oemof import solph
+from src.utils.economics import calculate_epc
 
 # create a function for each component
-
-def calculate_epc(capex, lifetime, invest_rate):
-    pass
-
 
 # electricity demand
 def add_electricity_demand(es, buses, cfg, input_data):

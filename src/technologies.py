@@ -1,5 +1,5 @@
 from oemof import solph
-from src.utils.economics import calculate_epc
+from src.economics import calculate_epc
 
 # create a function for each component
 
@@ -36,12 +36,21 @@ def add_electricity_grid(es, buses, cfg, input_data):
 def add_pv(es, buses, cfg, input_data):
 
     # decide whether PV is fixed or can be optimized
-    if cfg.get("mode", "optimizable")  == "fixed":
-        flow_param = {"maximum": input_data[cfg["column"]]}
-        nominal_capacity = cfg["capacity"]
-    elif cfg.get("mode") == "invest":
+    if cfg.get("mode", "fixed")  == "fixed":
         flow_param = {"fix": input_data[cfg["column"]]}
-        nominal_capacity = solph.Investment(ep_costs=cfg["ep_cost"])
+        nominal_capacity = cfg["capacity"]
+
+    elif cfg.get("mode") == "invest":
+
+        epc = calculate_epc(
+            capex=cfg["capex"],
+            fixed_opex_pct=cfg["opex"],
+            lifetime=cfg["lifetime"],
+            interest_rate=cfg["interest_rate"]
+        )
+
+        flow_param = {"fix": input_data[cfg["pv_column"]]}
+        nominal_capacity = solph.Investment(ep_costs=epc)
     else:
         raise ValueError(f"Unknown mode {cfg['mode']} for PV")
 
@@ -60,13 +69,38 @@ def add_pv(es, buses, cfg, input_data):
 # battery
 def add_battery(es, buses, cfg, input_data):
 
+    if cfg.get("mode", "fixed") == "fixed":
+
+        nominal_capacity = cfg["capacity"]
+
+    elif cfg.get("mode") == "invest":
+
+        epc = calculate_epc(
+            capex=cfg["capex"],
+            fixed_opex_pct=cfg["opex"],
+            lifetime=cfg["lifetime"],
+            interest_rate=cfg["interest_rate"]
+        )
+
+        nominal_capacity = solph.Investment(ep_costs=epc)
+
+    else:
+        raise ValueError(f"Unknown mode {cfg['mode']}")
+
     battery = solph.components.GenericStorage(
         label="Battery",
-        nominal_capacity=cfg["capacity"],
-        inputs={buses["electricity"]:solph.Flow()},
-        outputs={buses["electricity"]: solph.Flow()},
-        inflow_conversion_factor = cfg["inflow_conversion_factor"],
-        loss_rate = cfg["loss_rate"]
+        nominal_capacity=nominal_capacity,
+
+        inputs={
+            buses["electricity"]: solph.Flow()
+        },
+        outputs={
+            buses["electricity"]: solph.Flow()
+        },
+
+        inflow_conversion_factor=cfg["inflow_conversion_factor"],
+        outflow_conversion_factor=1,   # recommended explicitly
+        loss_rate=cfg["loss_rate"]
     )
 
     es.add(battery)

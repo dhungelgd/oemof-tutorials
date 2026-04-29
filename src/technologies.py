@@ -88,7 +88,7 @@ def add_battery(es, buses, cfg, input_data):
         raise ValueError(f"Unknown mode {cfg['mode']}")
 
     battery = solph.components.GenericStorage(
-        label="Battery",
+        label="battery",
         nominal_capacity=nominal_capacity,
 
         inputs={
@@ -105,10 +105,25 @@ def add_battery(es, buses, cfg, input_data):
 
     es.add(battery)
 
+# grid feed-in
+def add_grid_feedin(es, buses, cfg, input_data):
+
+    grid_feedin = solph.components.Sink(
+        label="grid_feedin",
+        inputs={
+            buses["electricity"]: solph.Flow(
+                variable_costs=-cfg["feedin_tariff"],
+            )
+        }
+    )
+
+    es.add(grid_feedin)
+
 # mapping dictionary
 TECH_MAPPING = {
     "electricity_demand": add_electricity_demand,
     "electricity_grid": add_electricity_grid,
     "pv": add_pv,
-    "battery": add_battery
+    "battery": add_battery,
+    "grid_feedin": add_grid_feedin
 }

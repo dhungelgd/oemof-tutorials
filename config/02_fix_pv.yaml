@@ -1,3 +1,8 @@
+# Solver options
+solver:
+  name: "cbc" # solver name, e.g. cbc, glpk, gurobi
+  tee: false   # prints solver output to console if true
+
 buses:
   # Electricity bus
   electricity_bus:
@@ -15,24 +20,19 @@ technologies:
   # Grid
   electricity_grid:
     bus: "electricity"
-    variable_costs: 0.3  # €/kWh
+    variable_costs: 0.2  # €/kWh
     feedin_tariff: 0.06  # €/kwh
     label: "electricity_grid"
 
   # PV
   pv:
     profile: "energy_data.csv"
-    column: "pv yield (kW/kW)"
+    pv_column: "pv yield (kW/kW)"
     capacity: 5 # kW
     lifetime: 20 # years
     capex: 1500 # €/kw
     opex: 3 # %
     label: "pv"
-    mode: "optimizable" # or "optimizable"
-
-# Solver options
-solver:
-  name: "cbc" # solver name, e.g. cbc, glpk, gurobi
-  tee: false   # prints solver output to console if true
-
+    mode: "invest" # "fixed" or "invest"
+    interest_rate: 0.05
 

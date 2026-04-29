@@ -21,29 +21,36 @@ technologies:
   electricity_grid:
     bus: "electricity"
     variable_costs: 0.3  # €/kWh
-    feedin_tariff: 0.06  # €/kwh
     label: "electricity_grid"
+
+  # Grid Feed-in
+  grid_feedin:
+    bus: "electricity"
+    feedin_tariff: 0.08  # €/kwh
+    label: "grid_feedin"
 
   # PV
   pv:
     profile: "energy_data.csv"
-    column: "pv yield (kW/kW)"
+    pv_column: "pv yield (kW/kW)"
     capacity: 5 # kW
-    lifetime: 20 # years
-    capex: 1500 # €/kw
-    opex: 3 # %
+    lifetime: 25 # years
+    capex: 1000 # €/kw
+    opex: 2 # %
     label: "pv"
-    mode: "optimizable" # or "optimizable"
+    mode: "invest" # "fixed" or "invest"
+    interest_rate: 0.05
 
   # Battery
   battery:
-    capacity: 10  #kWh
-    lifetime: 20  #years
-    capex: 750  #€/kWh
-    opex: 3  # % of capex
+    capacity: 1  #kWh
+    lifetime: 10  #years
+    capex: 250  #€/kWh
+    opex: 2  # % of capex
     inflow_conversion_factor: 0.9
     loss_rate: 0.01
-
+    mode: "invest"
+    interest_rate: 0.05
 
 
 
